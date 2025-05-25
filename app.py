@@ -151,6 +151,7 @@ from dash import dcc # Import dcc
 #app = Dash()
 app = Dash(__name__)
 server = app.server
+app.title= '지역별 공립유치원 미취원율'
 
 fig = px.bar(rr_df,
              y='지역',
