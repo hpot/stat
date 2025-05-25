@@ -171,12 +171,16 @@ fig.update_traces(texttemplate='%{x}%',
                   marker_color = px.colors.qualitative.Plotly[1],
                   textfont_color = 'white',
 
-
                   )
 
 fig.layout.xaxis.fixedrange = True
 fig.layout.yaxis.fixedrange = True
 fig.layout.barcornerradius = 3
+
+fig.update_layout(
+  uniformtext_minsize=12,
+  uniformtext_mode='show'
+)
 
 # App layout
 app.layout = [
