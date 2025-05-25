@@ -198,3 +198,64 @@ app.layout = [
 # Run the app
 if __name__ == '__main__':
     app.run(debug=False)
+
+# Import packages
+
+from dash import Dash, html, dash_table
+import pandas as pd
+import plotly.express as px
+from dash import dcc # Import dcc
+
+
+# Initialize the app
+#app = Dash()
+app = Dash(__name__)
+server = app.server
+app.title = '지역별 공립유치원 미취원율'
+
+fig = px.bar(rr_df,
+             y='지역',
+             x='공립유치원 미취원율',
+             text_auto=True,
+             orientation = 'h',
+
+)
+
+
+fig.update_traces(texttemplate='%{x}%',
+                  textposition='auto',
+                  marker_color = px.colors.qualitative.Plotly[1],
+                  textfont_color = 'white',
+
+
+                  )
+
+fig.layout.xaxis.fixedrange = True
+fig.layout.yaxis.fixedrange = True
+fig.layout.barcornerradius = 3
+
+fig.update_layout(
+  uniformtext_minsize=12,
+  uniformtext_mode='show',
+  font=dict(size=13),
+  hoverlabel=dict(
+      bgcolor='white',
+      font_size=13
+
+  )
+)
+
+
+# App layout
+app.layout = [
+    html.Div(children='지역별 공립유치원 미취원율'),
+    dcc.Graph(figure=fig),
+
+    dash_table.DataTable(data=rr_df.to_dict('records'), page_size=17),
+    dash_table.DataTable(data=final2_df.to_dict('records'), page_size=17),
+
+]
+
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=False)
