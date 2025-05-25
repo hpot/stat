@@ -38,6 +38,9 @@ df = df.reset_index(drop=True)
 # Rename columns
 df = df.rename(columns={df.columns[0]: '지역', df.columns[1]: '설립유형', df.columns[2]: '총정원수'})
 
+# Print the resulting DataFrame
+df
+
 # prompt: 총정원수값 전부 int로 변환 df_kind 지역 groupby agg 공립유치원 count 총정원수 sum
 
 # '총정원수' column to int
@@ -49,12 +52,17 @@ df_kind  = df.groupby('지역').agg(
     총정원수=('총정원수', 'sum')      # Sum '총정원수' column
 ).reset_index()
 
+# Print the aggregated DataFrame
+df_kind
+
 # prompt: df_kind DataFrame 사용: column0 값 전부 str로 변경 print
 
 # Access the first column by its name
 column_name = df_kind.columns[0]
 # Convert the column to string type
 df_kind[column_name] = df_kind[column_name].astype(str)
+# Print the column
+df_kind[column_name]
 
 # prompt: https://raw.githubusercontent.com/hpot/stat/main/2501kind.xlsx 이걸로 df생성
 
@@ -83,6 +91,10 @@ df_pop = df_pop[['지역', '3~5세인구수']]
 # Remove the first 3 rows (index 0, 1, and 2)
 df_pop = df_pop.drop([0, 1, 2])
 
+# Print the resulting DataFrame
+print("\nDataFrame after processing:")
+df_pop
+
 # prompt: df_kind 지역값 rstrip df_pop 지역값 rstrip
 
 df_kind['지역'] = df_kind['지역'].str.rstrip()
@@ -93,6 +105,9 @@ df_pop['지역'] = df_pop['지역'].str.rstrip()
 import pandas as pd
 # Merge the two dataframes on the '지역' column
 merged_df = pd.merge(df_kind, df_pop, on='지역', how='inner')
+
+# Display the merged dataframe
+merged_df
 
 # prompt: merged_df DataFrame 사용: 컬럼추가 '공립유치원 미취원율' 값은 1,0- (총정원수/3~5세인구수) 공립유치원 미취원율로 내림차순 정렬 3~5세인구수값 전부 int로 변경 print
 
@@ -105,15 +120,25 @@ merged_df['공립유치원 미취원율'] = 1.0 - (merged_df['총정원수'] / m
 # Sort the DataFrame by '공립유치원 미취원율' in descending order
 merged_df = merged_df.sort_values(by='공립유치원 미취원율', ascending=False)
 
+# Print the sorted DataFrame
+merged_df
+
 # prompt: merged_df DataFrame 사용: 지역명 공립유치원수 총정원수 3~5세인구수 공립유치원 미취원율 을 제외한 모든 열 삭제print
 
 # Drop all columns except for the specified ones
 columns_to_keep = ['지역', '공립유치원수', '총정원수', '3~5세인구수', '공립유치원 미취원율']
 merged_df = merged_df[columns_to_keep]
 
+# Print the updated dataframe
+merged_df
+
 # prompt: merged_df 깊은 복사 into final_df
 
 final_df = merged_df.copy(deep=True)
+
+# prompt: final_df
+
+final_df
 
 # prompt: final_df DataFrame 사용: 지역과 공립유치원 미취원율 제외한 모든 행 삭제 into rr_df 공립유치원 미취원율 오름차순정렬 print
 
@@ -123,10 +148,15 @@ rr_df = final_df[['지역', '공립유치원 미취원율']]
 # Sort rr_df by '공립유치원 미취원율' in ascending order
 rr_df = rr_df.sort_values(by='공립유치원 미취원율')
 
+# Print the resulting dataframe
+rr_df
+
 # prompt: rr_df DataFrame 사용: 공립유치원 미취원율 값 ×100 후.2f round print
 
 # Multiply the column by 100 and round to 2 decimal places
 rr_df['공립유치원 미취원율'] = (rr_df['공립유치원 미취원율'] * 100).round(2)
+# Print the modified column
+print(rr_df['공립유치원 미취원율'])
 
 # prompt: rr_df col1값 추출 후 리스트화 into region col2값 추출후 리스트화 into rate print
 
@@ -138,9 +168,13 @@ df_z =[list(z) for z in zip(region, rate)]
 # prompt: rate값 전부 100.0-rate 후 .2f round into c
 
 c = [round(100.0 - r, 2) for r in rate]
-c
+
+# prompt: final_df 에서 유치원 미취원율열 삭제 후 into final2_df
+
+final2_df = final_df.drop(columns=['공립유치원 미취원율'])
 
 # Import packages
+
 from dash import Dash, html, dash_table
 import pandas as pd
 import plotly.express as px
@@ -151,7 +185,7 @@ from dash import dcc # Import dcc
 #app = Dash()
 app = Dash(__name__)
 server = app.server
-app.title= '지역별 공립유치원 미취원율'
+app.title = '지역별 공립유치원 미취원율'
 
 fig = px.bar(rr_df,
              y='지역',
@@ -170,7 +204,11 @@ fig.layout.yaxis.fixedrange = True
 app.layout = [
     html.Div(children='지역별 공립유치원 미취원율'),
     dcc.Graph(figure=fig),
+
     dash_table.DataTable(data=rr_df.to_dict('records'), page_size=17),
+    dash_table.DataTable(data=final2_df.to_dict('records'), page_size=17),
+
+
 ]
 
 # Run the app
