@@ -36,17 +36,17 @@ df = df[~df.iloc[:, 1].astype(str).str.contains('사립', regex=False)]
 df = df.reset_index(drop=True)
 
 # Rename columns
-df = df.rename(columns={df.columns[0]: '지역', df.columns[1]: '설립유형', df.columns[2]: '총정원수'})
+df = df.rename(columns={df.columns[0]: '지역', df.columns[1]: '설립유형', df.columns[2]: '총정원'})
 
 # prompt: 총정원수값 전부 int로 변환 df_kind 지역 groupby agg 공립유치원 count 총정원수 sum
 
 # '총정원수' column to int
-df['총정원수'] = df['총정원수'].astype(int)
+df['총정원'] = df['총정원'].astype(int)
 
 # Group by '지역' and aggregate
 df_kind  = df.groupby('지역').agg(
     공립유치원수=('설립유형', 'count'),  # Count '설립유형' column (which are all '공립' at this point)
-    총정원수=('총정원수', 'sum')      # Sum '총정원수' column
+    총정원=('총정원', 'sum')      # Sum '총정원수' column
 ).reset_index()
 
 # prompt: df_kind DataFrame 사용: column0 값 전부 str로 변경 print
@@ -100,7 +100,7 @@ merged_df = pd.merge(df_kind, df_pop, on='지역', how='inner')
 merged_df['3~5세인구수'] = merged_df['3~5세인구수'].str.replace(',', '').astype(int)
 
 # Calculate the '공립유치원 미취원율'
-merged_df['공립유치원 미취원율'] = 1.0 - (merged_df['총정원수'] / merged_df['3~5세인구수'])
+merged_df['공립유치원 미취원율'] = 1.0 - (merged_df['총정원'] / merged_df['3~5세인구수'])
 
 # Sort the DataFrame by '공립유치원 미취원율' in descending order
 merged_df = merged_df.sort_values(by='공립유치원 미취원율', ascending=False)
@@ -108,7 +108,7 @@ merged_df = merged_df.sort_values(by='공립유치원 미취원율', ascending=F
 # prompt: merged_df DataFrame 사용: 지역명 공립유치원수 총정원수 3~5세인구수 공립유치원 미취원율 을 제외한 모든 열 삭제print
 
 # Drop all columns except for the specified ones
-columns_to_keep = ['지역', '공립유치원수', '총정원수', '3~5세인구수', '공립유치원 미취원율']
+columns_to_keep = ['지역', '공립유치원수', '총정원', '3~5세인구수', '공립유치원 미취원율']
 merged_df = merged_df[columns_to_keep]
 
 # prompt: merged_df 깊은 복사 into final_df
@@ -171,6 +171,7 @@ fig.update_traces(texttemplate='%{x}%',
                   marker_color = px.colors.qualitative.Plotly[1],
                   textfont_color = 'white',
 
+
                   )
 
 fig.layout.xaxis.fixedrange = True
@@ -179,7 +180,9 @@ fig.layout.barcornerradius = 3
 
 fig.update_layout(
   uniformtext_minsize=12,
-  uniformtext_mode='show'
+  uniformtext_mode='show',
+  font=dict(size=13)
+
 )
 
 # App layout
