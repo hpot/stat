@@ -196,9 +196,17 @@ fig = px.bar(rr_df,
 )
 
 
-fig.update_traces(texttemplate='%{x}%', textposition='auto')
+fig.update_traces(texttemplate='%{x}%',
+                  textposition='auto',
+                  marker_color = px.colors.qualitative.Plotly[1],
+                  textfont_color = 'white',
+
+
+                  )
+
 fig.layout.xaxis.fixedrange = True
 fig.layout.yaxis.fixedrange = True
+fig.layout.barcornerradius = 3
 
 # App layout
 app.layout = [
@@ -207,7 +215,6 @@ app.layout = [
 
     dash_table.DataTable(data=rr_df.to_dict('records'), page_size=17),
     dash_table.DataTable(data=final2_df.to_dict('records'), page_size=17),
-
 
 ]
 
