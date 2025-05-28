@@ -152,7 +152,7 @@ rr_series
 import dash
 from dash import dcc
 from dash import html
-from dash import dash_table
+from dash import dash_table, Input, Output, callback, no_update
 
 import pandas as pd
 import plotly.express as px
