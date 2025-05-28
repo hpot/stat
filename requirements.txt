@@ -4,4 +4,4 @@ plotly
 openpyxl
 gunicorn
 plotly.express
-dash.dependencies
+
