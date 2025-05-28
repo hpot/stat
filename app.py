@@ -153,7 +153,7 @@ import dash
 from dash import dcc
 from dash import html
 from dash import dash_table
-from dash.dependencies import Input, Output, State
+
 import pandas as pd
 import plotly.express as px
 
