@@ -148,7 +148,7 @@ rr_series
 
 # %%
 #$ import dash 등 필요한 라이브러리 임포트
-!#pip install dash
+
 import dash
 from dash import dcc
 from dash import html
