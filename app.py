@@ -199,8 +199,8 @@ for bar_index in range(num_bars - 1, -1, -1):
 
 
         df_current_step = pd.DataFrame({
-            '지역': list(current_frame_data.keys()),
-            '미취원율': list(current_frame_data.values()),
+            '항목': list(current_frame_data.keys()),
+            '값': list(current_frame_data.values()),
             '프레임': frame_counter,
         })
         data_frames.append(df_current_step)
@@ -211,8 +211,8 @@ animated_df = pd.concat(data_frames)
 
 # 가로 막대 그래프 생성
 fig = px.bar(animated_df,
-             x='미취원율,
-             y='지역',
+             x='값',
+             y='항목',
              orientation='h',
              animation_frame='프레임',
              range_x=[0, 100],
@@ -222,8 +222,8 @@ fig = px.bar(animated_df,
               [px.colors.qualitative.Plotly[1],
                px.colors.qualitative.Plotly[0]],
 
-             hover_data={'미취원율: True,
-                         '지역': True,
+             hover_data={'값': True,
+                         '항목': True,
                          '프레임': False,
               },
 
