@@ -2,7 +2,7 @@ name: Ping website
 
 on:
   schedule:
-    - cron: '*/10 * * * * '
+    - cron: '*/13 * * * * '
 
 jobs:
   ping:
